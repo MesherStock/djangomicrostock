@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-wrap">
+    <div class="container-fluid">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item active">Register</li>
+        </ul>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<!-- Login Start -->
+<div class="login">
+    <div class="container-fluid">
+        <div class="card mx-auto" style="max-width:820px; margin-top:40px;">
+            <div>
+                {% include "includes/alerts.html" %}
+            </div>
+            <form class="" action="{% url 'account:register' %}" method="post">
+                {% csrf_token %}
+                <div class="register-form">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>First Name</label>
+                            {{ form.first_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Last Name</label>
+                            {{ form.last_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label>E-mail</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Mobile No</label>
+                            {{ form.phone_number }}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Password</label>
+                            {{ form.password }}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Confirm Password</label>
+                            {{ form.confirm_password }}
+                        </div>
+                        <div class="col-md-12">
+                            <button class="btn btn-primary btn-block">Submit</button>
+                        </div>
+                        {{ form.email.errors }}
+                        {{ form.non_field_errors }}
+            </form>
+
+
+
+        </div>
+    </div>
+
+</div>
+<p class="text-center mt-4">Have an account?
+    <a href="{% url 'account:login' %}">Log In</a>
+</p>
+<br><br>
+<!-- Login End -->
+
+{% endblock %}

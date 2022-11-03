@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+{% if form %}
+<div class="container">
+    <div class="container">
+        <h5>Things to do in the marketplace</h5>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, mollitia?</p>
+    </div>
+    <form action="." method="post">
+        {% csrf_token %}
+    
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+</div>
+{% endif %}
+{% endblock %}

@@ -37,6 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts',
+    'category',
+    'carts',
+    'products',
+    'vendors',
+    
 ]
 
 MIDDLEWARE = [
@@ -121,7 +127,28 @@ STATICFILES_DIRS = [
     'microstock/static'
 ]
 
+
+# Media Files Configuration
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR /'mediaProd'/'media'
+
+DEFAULT_STORAGE_LOCATION = BASE_DIR /'mediaProd'/'download'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# AUTH_USER_MODEL = 
+AUTH_USER_MODEL = 'accounts.User'
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = 'ee856a78b8de25'
+EMAIL_HOST_PASSWORD = 'b0d9ebbfe5bcd6'
+EMAIL_PORT = '2525'

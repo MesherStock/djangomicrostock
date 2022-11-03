@@ -1,0 +1,5 @@
+{% autoescape off %}
+Hi {{ user.first_name }}
+<h5>As requested, please click on the link to reset your password</h5>
+http://{{ domain }}{% url 'account:password_validate' uidb64=uid token=token %}
+{% endautoescape %}
