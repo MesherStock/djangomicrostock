@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-%*i=o9s^nzd2qhqedf0y%5o*$656fvxtopiol#i*fkh$&oca2a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'microstock.pythonanywhere.com.']
+ALLOWED_HOSTS = []
 
 
 # Application definition
