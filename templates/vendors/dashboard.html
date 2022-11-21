@@ -11,10 +11,82 @@
     </div>
     <form action="." method="post">
         {% csrf_token %}
-    
+
         {{ form.as_p }}
         <input type="submit" value="Submit">
     </form>
 </div>
 {% endif %}
+
+
+<!-- Product List Start -->
+<div class="product-view">
+    <div class="container-fluid">
+
+        <div class="row">
+            {% if products %}
+            <div class="col-lg-6">
+
+                <div class="row">
+                    {% for item in products %}
+                    <div class="col-md-3">
+                        <div class="product-item">
+                            <div class="product-image">
+                                <a href="{{ item.get_absolute_url }}">
+                                    <img src="{{ item.image.url }}" alt="Product Image"
+                                        style='max-height: 200px; max-width: 100%;'>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <a href="{% url 'vendor:product_list' %}" class="btn">All Products</a>
+            </div>
+            {% endif %}
+
+            {% if transactions %}
+            <div class="col-lg-6">
+                <div class="table table-responsive">
+                    <table class="table table-dark">
+                        <thead>
+                            <th>Product</th>
+                            <th>Image</th>
+                            <th>User</th>
+                            <th>Total</th>
+                        </thead>
+                        {% for instance in transactions %}
+                        <tbody>
+
+
+                            <td>{{ instance }}</td>
+                            <td>
+                                <img src="{{ instance.product.image.url }}" alt="" width="100px">
+                            </td>
+                            <td>
+                                {{ instance.user.first_name }}
+                            </td>
+                            <td>{{ instance.product.price}}</td>
+
+                            <td>
+                                {{ instance.created_at | timesince }} ago
+                            </td>
+
+                        </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+                <a href="{% url 'vendor:transaction' %}" class="btn">All Transactions</a>
+
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+<!-- Product List End -->
+
+
+
 {% endblock %}

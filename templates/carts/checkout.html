@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %} Checkout{% endblock %}
+
+{% block content %}
+<!-- Checkout Start -->
+<div class="checkout">
+    <div class="container-fluid">
+        <form action="{% url 'order:place_order' %}" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="checkout-inner">
+                        <div class="billing-address">
+                            <h2>Billing Address</h2>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>First Name</label>
+                                    <input class="form-control" name="first_name" type="text" placeholder="First Name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Last Name</label>
+                                    <input class="form-control" name="last_name" type="text" placeholder="Last Name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>E-mail</label>
+                                    <input class="form-control" name="email" type="text" placeholder="E-mail">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Mobile No</label>
+                                    <input class="form-control" name="phone_number" type="text" placeholder="Mobile No">
+                                </div>
+                                <div class="col-md-12">
+                                    <label>Address</label>
+                                    <input class="form-control" name="address" type="text" placeholder="Address">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Country</label>
+                                    <input type="text" class="form-control" placeholder="Country" name="country">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>City</label>
+                                    <input class="form-control" name="city" type="text" placeholder="City">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>State</label>
+                                    <input class="form-control" name="state" type="text" placeholder="State">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>ZIP Code</label>
+                                    <input class="form-control" type="text" placeholder="ZIP Code">
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                       
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="checkout-inner">
+                        <div class="checkout-summary">
+                            <table class="table table-responsive table-borderless">
+                                <tbody class="align-middle">
+                                    {% for item in cart_items %}
+                                    <tr>
+                                        <td>
+
+                                            <img src="{{ item.product.image.url }}" alt="Image" width="80" />
+
+                                        </td>
+                                        <td>
+                                            <p>{{ item.product }}</p>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        
+                                        <td>${{ item.product.price }}</td>
+
+                                    </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="4">Tax</td>
+                                        <td>${{ tax }}</td>
+                                    </tr>
+                                    <tr class="font-weight-bold">
+                                        <td colspan="4" class="h4">Grand Total</td>
+                                        <td>${{ grand_total }}</td>
+                                    </tr>
+                                    
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="checkout-payment">
+                            <div class="payment-methods">
+                                <h1>Payment Methods</h1>
+                                <div class="payment-method">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="payment-1" name="payment">
+                                        <label class="custom-control-label" for="payment-1">Paypal</label>
+                                    </div>
+                                    <div class="payment-content" id="payment-1-show">
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci
+                                            ac
+                                            eros volutpat maximus lacinia quis diam.
+                                        </p>
+                                    </div>
+                                </div>
+                             
+                             
+                              
+                               
+                            </div>
+                            <div class="checkout-btn">
+                                <button type="submit">Place Order</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Checkout End -->
+{% endblock %}

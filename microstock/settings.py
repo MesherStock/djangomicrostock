@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-%*i=o9s^nzd2qhqedf0y%5o*$656fvxtopiol#i*fkh$&oca2a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'microstock.pythonanywhere.com.']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'category',
     'carts',
+    'orders',
     'products',
     'vendors',
     
@@ -60,7 +61,7 @@ ROOT_URLCONF = 'microstock.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["templates"],
+        'DIRS': [Path.joinpath(BASE_DIR,"templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'carts.context_processors.counter'
             ],
         },
     },
@@ -124,15 +126,21 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR /'static'
 STATICFILES_DIRS = [
-    'microstock/static'
+    Path.joinpath(BASE_DIR, 'microstock/static')
 ]
 
 
 # Media Files Configuration
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR /'mediaProd'/'media'
 
 DEFAULT_STORAGE_LOCATION = BASE_DIR /'mediaProd'/'download'
+
+if DEBUG:
+    STATIC_ROOT.mkdir(parents=True, exist_ok=True)
+    MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
+    DEFAULT_STORAGE_LOCATION.mkdir(parents=True, exist_ok=True)
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -149,6 +157,6 @@ MESSAGE_TAGS = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = 'ee856a78b8de25'
-EMAIL_HOST_PASSWORD = 'b0d9ebbfe5bcd6'
+EMAIL_HOST_USER = '3daa4ad3cb4635'
+EMAIL_HOST_PASSWORD = 'a3d2dd5f51c497'
 EMAIL_PORT = '2525'

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% block title %} Search {% endblock %}
 {% block content %}
 
 <!-- Product List Start -->
@@ -8,16 +8,17 @@
         {% if results %}
         <div class="row">
             <div class="col-lg-12">
-               
+
                 <div class="row">
-                           {% for item in results %}            
-                    <div class="col-md-3" >
+                    {% for item in results %}
+                    <div class="col-md-3">
                         <div class="product-item">
                             <div class="product-image">
                                 <a href="{{ item.get_absolute_url }}">
-                                    <img src="{{ item.image.url }}" alt="Product Image" style='max-height: 200px; max-width: 100%;'>
+                                    <img src="{{ item.image.url }}" alt="Product Image"
+                                        style='max-height: 200px; max-width: 100%;'>
                                 </a>
-                            
+
                             </div>
                             <div class="product-price">
                                 <h3><span>$</span>{{ item.price }}</h3>
@@ -27,16 +28,17 @@
                     </div>
                     {% endfor %}
                 </div>
-                
-                
+
+
                 <!-- Pagination Start -->
                 <div class="col-md-12">
-         <nav aria-label="Page navigation example">
+                    <nav aria-label="Page navigation example">
                         {% if results.has_other_pages %}
                         <ul class="pagination justify-content-center">
                             {% if results.has_previous %}
                             <li class="page-item">
-                                <a class="page-link" href="?page={{ results.previous_page_number }}" tabindex="-1">Previous</a>
+                                <a class="page-link" href="?page={{ results.previous_page_number }}"
+                                    tabindex="-1">Previous</a>
                             </li>
                             {% else %}
                             <li class="page-item disabled">
@@ -64,9 +66,9 @@
                     </nav>
                 </div>
                 <!-- Pagination Start -->
-            </div>           
-            
-            
+            </div>
+
+
         </div>
         {% else %}
         <div style="text-align: center;">
@@ -75,6 +77,6 @@
         {% endif %}
     </div>
 </div>
-<!-- Product List End -->  
+<!-- Product List End -->
 
 {% endblock %}

@@ -1,0 +1,185 @@
+{% extends 'base.html' %} {% block title %} Cart {% endblock %} {% block content %}
+{% load static %}
+<!-- Cart Start -->
+<div class="cart-page">
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-lg-7">
+                <div class="cart-page-inner">
+                    <div>
+                        <h3>Billing Address</h3>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-text">{{ order.full_name }}</p>
+                            <p class="card-text">{{ order.address }}</p>
+                            <p class="card-text">{{ order.city }},{{ order.state }}</p>
+                            <p class="card-text">{{ order.country }}</p>
+                            <p class="card-text">{{ order.email }}</p>
+                            <p class="card-text">{{ order.phone_number }}</p>
+
+
+
+
+                        </div>
+                    </div>
+                    <h3>Order Review</h3>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+
+                            <tbody class="align-middle">
+                                {% for item in cart_items %}
+                                <tr>
+                                    <td>
+                                        <div class="img">
+                                            <a href="{{ item.product.get_absolute_url }}"><img
+                                                    src="{{ item.product.image.url }}" alt="Image" /></a>
+                                            <p>{{ item.product }}</p>
+                                        </div>
+                                    </td>
+                                    <td>${{ item.product.price }}</td>
+
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-5">
+                <div class="cart-page-inner">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="cart-summary">
+                                <div class="cart-content">
+                                    <h1>Order Summary</h1>
+                                    <p>Sub Total<span>${{ total }}</span></p>
+                                    <p>Tax<span>${{ tax }}</span></p>
+                                    <h2>Grand Total<span>${{ grand_total }}</span></h2>
+                                </div>
+                                <div class="cart-btn">
+                                    <div id="paypal-button-container"></div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script
+                    src="https://www.paypal.com/sdk/js?client-id=AZR8GA1hPj7wkq9_XmCSfQ8C-N7WV0rAeFNipwYvvARlsyVm2R54DY_FRnXdPqVRz21krnwm5Moly4xu&currency=USD">
+                </script>
+
+                <!-- Set up a container element for the button -->
+
+
+
+                <script>
+                    function getCookie(name) {
+                        let cookieValue = null;
+                        if (document.cookie && document.cookie !== '') {
+                            const cookies = document.cookie.split(';');
+                            for (let i = 0; i < cookies.length; i++) {
+                                const cookie = cookies[i].trim();
+                                // Does this cookie string begin with the name we want?
+                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                    break;
+                                }
+                            }
+                        }
+                        return cookieValue;
+                    }
+
+                    var csrftoken = getCookie('csrftoken');
+                    var amount = "{{ grand_total }}"
+                    var url = "{% url 'order:payment' %}"
+                    var payment_method = 'PayPal'
+                    var orderID = "{{ order.order_number }}"
+                    var redirect_url = '{% url "order:success" %}'
+                   
+
+                    paypal.Buttons({
+                        style: {
+                            color: 'gold',
+                            shape: 'rect'
+                        },
+
+                        // Sets up the transaction when a payment button is clicked
+
+                        createOrder: (data, actions) => {
+
+                            return actions.order.create({
+
+                                purchase_units: [{
+
+                                    amount: {
+
+                                        value: amount // Can also reference a variable or function
+
+                                    }
+
+                                }]
+
+                            });
+
+                        },
+
+                        // Finalize the transaction after payer approval
+
+                        onApprove: (data, actions) => {
+
+                            return actions.order.capture().then(function (orderData) {
+
+                                // Successful capture! For dev/demo purposes:
+
+                                console.log('Capture result', orderData, JSON.stringify(orderData,
+                                    null, 2));
+
+                                const transaction = orderData.purchase_units[0].payments.captures[
+                                    0];
+
+                                sendData()
+                                function sendData() {
+                                    fetch(url, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRFToken':csrftoken,
+                                            },
+                                            body: JSON.stringify({
+                                                orderID: orderID,
+                                                transID:orderData.id,
+                                                paypal_transaction_id:transaction,
+                                                payment_method:payment_method,
+                                                status: orderData.status,
+                                            }),
+                                        })
+                                        .then((response) => response.json())
+                                        .then((data) => {
+                                            // console.log('Success:', data);
+                                            window.location.href= redirect_url
+                                        })
+                                        .catch((error) => {
+                                            console.error('Error:', error);
+                                        });
+                                }
+
+                            });
+
+                        }
+
+                    }).render('#paypal-button-container');
+                </script>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<!-- Cart End -->
+
+{% endblock %}

@@ -14,6 +14,9 @@ class Category(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 
+
+    def get_url(self):
+        return reverse("category:category_view")
     def __str__(self):
         return self.title
 
@@ -36,9 +39,8 @@ class CategoryImage(models.Model):
     
     
     
-    def get_url(self):
-        return reverse("category:category_view")
+
     
     
-    def get_absolute_url(self):
-        return reverse('category:category', args={self.slug})
+    def get_cat_url(self):
+        return reverse('category:category', kwargs={"slug":self.slug})

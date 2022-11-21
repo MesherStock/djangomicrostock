@@ -4,6 +4,8 @@ from .forms import RegistrationForm
 from .models import User
 from django.contrib import auth, messages
 from django.contrib.auth import logout, login, authenticate
+from carts.models import Cart, CartItem
+from carts.views import _cart_id
 
 #User Account Verification
 from django.utils.encoding import force_bytes
@@ -12,6 +14,8 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
+
+import requests
 
 
 
@@ -64,9 +68,31 @@ def login(request):
         user = auth.authenticate(request, email=email, password=password)
 
         if user is not None:
+            try:
+                cart = Cart.objects.get(cart_id=_cart_id(request))
+                cart_item_exists = CartItem.objects.filter(cart=cart).exists()
+                if cart_item_exists:
+                    cart_item = CartItem.objects.filter(cart=cart)
+                    for i in cart_item:
+                        i.user = user
+                        i.save()
+                    
+            except Cart.DoesNotExist:
+                cart = Cart.objects.create(cart_id=_cart_id(request))
+                cart.save()
             auth.login(request, user)
             messages.success(request, 'You are now logged in')
-            return redirect('/')
+            
+            url = request.META.get("HTTP_REFERER")
+            try:
+                query = requests.utils.urlparse(url).query
+                params = dict(x.split("=") for x in query.split("&"))
+                if 'next' in params:
+                    nextPage = params['next']
+                    return redirect(nextPage)
+                
+            except:
+                return redirect('category:category_view')
         
         else:
             messages.error(request, 'Invalid login credentials')

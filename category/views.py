@@ -16,7 +16,6 @@ def category_view(request):
 
 
 def category_product_list(request, slug):
-    categories = Category.objects.all()
     if slug:
         category = get_object_or_404(Category, slug=slug)
         products = Product.objects.filter(category=category)
@@ -24,7 +23,7 @@ def category_product_list(request, slug):
     context = {
         "products": products,
         'category': category,
-        'categories': categories,
+        
     }
     
     return render(request, 'category/category_product_list.html', context)

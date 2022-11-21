@@ -8,6 +8,9 @@ from django.db.models.signals import pre_save
 from django.utils.text import slugify
 from django.urls import reverse
 
+#For WaterMark
+from PIL import ImageDraw, Image, ImageFont
+
 # Create your models here.
 def download_media(instance, filename):
     return "%s/%s"%(instance.slug, filename)
@@ -23,12 +26,40 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
     featured = models.BooleanField(default=False)
     recent_product = models.BooleanField(default=False)
+    is_digital = models.BooleanField(default=True)
+    
+    
+    def save(self, *args, **kwargs):
+        super(Product, self).save(*args, **kwargs)
+        photo = Image.open(self.image.path)
+        if photo.mode in ("RGBA", "p"):
+            photo = photo.convert("RGB")
+        
+        width,height = photo.size
+        draw = ImageDraw.Draw(photo)
+        mytext = "MICROSTOCK"
+        font_size = int(width/15)
+        font = ImageFont.truetype("C:/Users/meshl/Desktop/Microstock/I am Hueca.ttf", font_size)
+        x, y = int(width/2), int(height/2)
+        draw.text((x, y), mytext, font=font, fill="#FFF", stroke_width=5, stroke_fill='#222', anchor="ms")
+        photo.save(self.image.path)
+
+
+
+    
+    def get_edit_url(self):
+        view_name = 'vendor:update'
+        return reverse(view_name, kwargs={"slug":self.slug})
+
+    
+    def get_absolute_url(self):
+        return reverse("product:detail", kwargs={"slug":self.slug})     
+        
     
     def __str__(self):
         return self.title
     
-    def get_absolute_url(self):
-        return reverse("product:detail", args={self.slug})
+
     
 
 def save_slug(instance, new_slug=None):

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Sales Report {% endblock %}
+
+
+{% block content %}
+{% if object_list %}
+<div class="container mb-4">
+    <div class="table table-responsive">
+        <table class="table table-dark">
+            <thead>
+                <th>Product</th>
+                <th>Image</th>
+                <th>User</th>
+                <th>Total</th>
+            </thead>
+            {% for instance in object_list %}
+            <tbody>
+                
+
+              <td>{{ instance }}</td>
+              <td>
+                <img src="{{ instance.product.image.url }}" alt="" width="100px">
+              </td>
+              <td>
+                {{ instance.user.first_name }}
+               </td>
+              <td>{{ instance.product.price}}</td>
+            
+               <td>
+                {{ instance.created_at | timesince }} ago
+               </td>
+
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% else %}
+<div class="text-center">
+    <h3>There is no transaction on your dashboard</h3>
+</div>
+{% endif %}
+{% endblock %}
